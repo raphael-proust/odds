@@ -1,0 +1,7 @@
+description = "Dice roller"
+version = "%%VERSION_NUM%%"
+requires = ""
+archive(byte) = "odds.cma"
+archive(native) = "odds.cmxa"
+plugin(byte) = "odds.cma"
+plugin(native) = "odds.cmxs"
