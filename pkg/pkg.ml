@@ -4,6 +4,9 @@
 open Topkg
 
 let () =
-  Pkg.describe "odds" @@ fun c ->
-  Ok [ Pkg.mllib "src/odds.mllib";
-       Pkg.test "test/test"; ]
+	Pkg.describe "odds" @@ fun c ->
+	Ok [
+		Pkg.mllib "src/odds.mllib";
+		Pkg.bin "src/roll";
+		Pkg.test "test/test";
+	]

@@ -11,10 +11,11 @@ let d100 = 100
 
 let roll_1 d = 1 + Random.int d
 
-type t =
+type u = Types.u =
 	| D of int * d
-	| Plus of t list
-	| Const of int
+	| K of int
+type t = u list
+
 
 
 let rec roll acc = function
@@ -26,8 +27,11 @@ let rec roll acc = function
 				loop (acc + roll_1 s) (n - 1)
 		in
 		loop acc n
-	| Plus ts ->
-		List.fold_left roll acc ts
-	| Const k -> acc + k
+	| K k -> acc + k
 
-let roll t = roll 0 t
+let roll t = List.fold_left roll 0 t
+
+let t_of_string s =
+
+	let lexbuf = Lexing.from_string s in
+	Parser.formula Lexer.token lexbuf

@@ -8,11 +8,13 @@ bug-reports: "https://github.com/raphael-proust/odds"
 tags: ["games" "dice" "random"]
 available: [ ocaml-version >= "4.02.0"]
 depends: [
-  "ocamlfind" {build}
-  "ocamlbuild" {build}
-  "topkg" {build}
+	"ocamlfind" {build}
+	"ocamlbuild" {build}
+	"topkg" {build}
+	"menhir" {build}
+	"cmdliner"
 ]
 depopts: [  ]
 build: [
-  [ "ocaml" "pkg/pkg.ml" "build" "--pinned" "%{pinned}%" ]
+	[ "ocaml" "pkg/pkg.ml" "build" "--pinned" "%{pinned}%" ]
 ]

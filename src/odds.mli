@@ -9,9 +9,11 @@ val d12: d
 val d20: d
 val d100: d
 
-type t =
+type u = Types.u =
 	| D of int * d
-	| Plus of t list
-	| Const of int
+	| K of int
+type t = u list
 
 val roll: t -> int
+
+val t_of_string: string -> t

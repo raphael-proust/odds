@@ -1,2 +1,4 @@
+true: bin_annot, use_menhir
 <src>: include
+<src/*>: package(cmdliner)
 <test>: include
