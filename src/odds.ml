@@ -9,7 +9,11 @@ let d12 = 12
 let d20 = 20
 let d100 = 100
 
-let roll_1 d = 1 + Random.int d
+let roll_1 d =
+	if d <= 0 then
+		raise (Invalid_argument "Odds: negative or null sidedness")
+	else
+		1 + Random.int d
 
 type u = Types.u =
 	| D of int * d
