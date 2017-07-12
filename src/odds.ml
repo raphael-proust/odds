@@ -84,3 +84,14 @@ let rec string_of_t = function
 
 let string_of_t t =
 	fst (string_of_t t)
+
+module DSL = struct
+	let ( ! ) k = K k
+	let ( % ) l r = Binop(l, Dice, r)
+	let ( + ) l r = Binop(l, Add, r)
+	let ( - ) l r = Binop(l, Sub, r)
+	let ( ~- ) t = Unop(Neg, t)
+	let ( * ) l r = Binop(l, Mul, r)
+	let ( / ) l r = Binop(l, Div, r)
+
+end
