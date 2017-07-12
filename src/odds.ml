@@ -12,13 +12,13 @@ type t = Types.t =
 	| K of int
 
 
-let roll_1 d =
+let roll_1 state d =
 	if d <= 0 then
 		raise (Invalid_argument "Odds: negative or null sidedness")
 	else
-		1 + Random.int d
+		1 + Random.State.int state d
 
-let apply_bin l binop r = match binop with
+let apply_bin state l binop r = match binop with
 	| Add -> l + r
 	| Sub -> l - r
 	| Mul -> l * r
@@ -28,17 +28,29 @@ let apply_bin l binop r = match binop with
 			if n <= 0 then
 				acc
 			else
-				loop (acc + roll_1 r) (n - 1)
+				loop (acc + roll_1 state r) (n - 1)
 		in
 		loop 0 l
 
 let apply_un unop t = match unop with
 	| Neg -> ~- t
 
-let rec roll = function
-	| Binop (r, binop, l) -> apply_bin (roll r) binop (roll l)
-	| Unop (unop, t) -> apply_un unop (roll t)
+let rec roll state = function
+	| Binop (l, binop, r) ->
+		let l = roll state l in
+		let r = roll state r in
+		apply_bin state l binop r
+	| Unop (unop, t) ->
+		let t = roll state t in
+		apply_un unop t
 	| K n -> n
+
+let roll ?state t =
+	let state = match state with
+		| None -> Random.State.make_self_init ()
+		| Some state -> state
+	in
+	roll state t
 
 
 let t_of_string s = Parser.entry Lexer.token (Lexing.from_string s)

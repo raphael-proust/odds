@@ -14,6 +14,12 @@ let test () =
 			true
 	);
 	assert (roll (t_of_string "1d1+1d1+1d1+1d1+1d1") = 5);
+	assert (
+		let state1 = Random.State.make [| 1111111; 1111112; 1111114; 1111118; 9999990 |] in
+		let state2 = Random.State.copy state1 in
+		let t = Binop(K 1000, Dice, K 1000) in
+		roll ~state:state1 t = roll ~state:state2 t
+	);
 	()
 
 let () = test ()
