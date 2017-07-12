@@ -1,19 +1,17 @@
-
-(* The type of a dice of a given sidedness. *)
-type d = int
-val d4: d
-val d6: d
-val d8: d
-val d10: d
-val d12: d
-val d20: d
-val d100: d
-
-type u = Types.u =
-	| D of int * d
+type binop = Types.binop =
+	| Add
+	| Sub
+	| Mul
+	| Div
+	| Dice
+type unop = Types.unop =
+	| Neg
+type t = Types.t =
+	| Binop of t * binop * t
+	| Unop of unop * t
 	| K of int
-type t = u list
 
 val roll: t -> int
 
 val t_of_string: string -> t
+val string_of_t: t -> string

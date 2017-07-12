@@ -1,22 +1,35 @@
 
 %{
 
+open Types
+
 %}
 
 %token EOF
-%token<int> INTEGER
-%token DICE
-%token PLUS
+%token <int> INTEGER
+%token PLUS DASH STAR SLASH D
+%token LPAREN RPAREN
 
-%start<Types.t> formula
+%left PLUS DASH
+%left STAR SLASH
+%nonassoc NEG
+%left D
+
+%start<Types.t> entry
 
 %%
 
-formula:
-	| atoms = separated_nonempty_list(PLUS, atom) EOF { atoms }
+entry:
+	| t=formula EOF { t }
 
-atom:
-	| n=INTEGER DICE s=INTEGER { Types.D (n, s) }
-	| k=INTEGER { Types.K k }
+formula:
+	| k=INTEGER { K k }
+	| LPAREN t = formula RPAREN { t }
+	| l=formula D r=formula { Binop(l, Dice, r) }
+	| l=formula PLUS r=formula { Binop(l, Add, r) }
+	| l=formula DASH r=formula { Binop(l, Sub, r) }
+	| l=formula STAR r=formula { Binop(l, Mul, r) }
+	| l=formula SLASH r=formula { Binop(l, Div, r) }
+	| DASH t=formula %prec NEG { Unop(Neg, t) }
 
 %%

@@ -1,5 +1,12 @@
-type d = int
-type u =
-	| D of int * d
+type binop =
+	| Add
+	| Sub
+	| Mul
+	| Div
+	| Dice
+type unop =
+	| Neg
+type t =
+	| Binop of t * binop * t
+	| Unop of unop * t
 	| K of int
-type t = u list
