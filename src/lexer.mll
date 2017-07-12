@@ -14,7 +14,7 @@ rule token = parse
 	| '+' { Parser.PLUS }
 	| '-' { Parser.DASH }
 	| '/' { Parser.SLASH }
-	| '*' { Parser.STAR }
+	| ['*' 'x'] { Parser.STAR }
 	| '(' { Parser.LPAREN }
 	| ')' { Parser.RPAREN }
 

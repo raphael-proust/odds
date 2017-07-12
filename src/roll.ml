@@ -8,7 +8,12 @@ let verbose = Cmdliner.Arg.(
 )
 
 let formula = Cmdliner.Arg.(
-	value & pos 0 string "0" & info [] ~doc:"The dice formula to roll" ~docv:"FORMULA"
+
+	let doc =
+		"The formula to roll. All the positional arguments are \
+                 joined together to form the formula."
+	in
+	value & (pos_all string []) & (info [] ~doc ~docv:"FORMULA")
 )
 
 let main seed verbose formula =
@@ -20,6 +25,8 @@ let main seed verbose formula =
 	let record = ref [] in
 	let recorder side result = record := (side, result) :: !record in
 	let recorder = if verbose then Some recorder else None in
+
+	let formula = String.concat " " formula in
 
 	let t = Odds.t_of_string formula in
 	let r = Odds.roll ?state ?recorder t in
