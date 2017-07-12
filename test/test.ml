@@ -20,6 +20,20 @@ let test () =
 		let t = Binop(K 1000, Dice, K 1000) in
 		roll ~state:state1 t = roll ~state:state2 t
 	);
+	assert (
+		let t = Binop(K 1, Dice, K 10) in
+		t = t_of_string (string_of_t t)
+	);
+	assert (
+		let t =
+			Binop(
+				Binop(K 2, Mul, Binop(K 1, Dice, K 2)),
+				Dice,
+				Binop(K 10, Sub, Binop(K 1, Dice, K 2))
+			)
+		in
+		t = t_of_string (string_of_t t)
+	);
 	()
 
 let () = test ()
