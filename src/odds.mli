@@ -11,7 +11,7 @@ type t = Types.t =
 	| Unop of unop * t
 	| K of int
 
-val roll: ?state:Random.State.t -> t -> int
+val roll: ?state:Random.State.t -> ?recorder:(int -> int -> unit) -> t -> int
 
 val t_of_string: string -> t
 val string_of_t: t -> string
