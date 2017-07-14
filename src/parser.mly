@@ -1,7 +1,7 @@
-
 %{
 
-open Types
+open Odds
+open Odds.Integer
 
 %}
 
@@ -15,7 +15,7 @@ open Types
 %nonassoc NEG
 %left D
 
-%start<Types.t> entry
+%start<Odds.t> entry
 
 %%
 
@@ -23,13 +23,13 @@ entry:
 	| t=formula EOF { t }
 
 formula:
-	| k=INTEGER { K k }
+	| i=INTEGER { !i }
 	| LPAREN t = formula RPAREN { t }
-	| l=formula D r=formula { Binop(l, Dice, r) }
-	| l=formula PLUS r=formula { Binop(l, Add, r) }
-	| l=formula DASH r=formula { Binop(l, Sub, r) }
-	| l=formula STAR r=formula { Binop(l, Mul, r) }
-	| l=formula SLASH r=formula { Binop(l, Div, r) }
-	| DASH t=formula %prec NEG { Unop(Neg, t) }
+	| l=formula D r=formula { dice l r }
+	| l=formula PLUS r=formula { l + r }
+	| l=formula DASH r=formula { l - r }
+	| l=formula STAR r=formula { l * r }
+	| l=formula SLASH r=formula { l / r }
+	| DASH t=formula %prec NEG { ~- t }
 
 %%

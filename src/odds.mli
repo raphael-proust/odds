@@ -1,27 +1,23 @@
-type binop =
-	| Add
-	| Sub
-	| Mul
-	| Div
-	| Dice
-type unop =
-	| Neg
-type t =
-	| Binop of t * binop * t
-	| Unop of unop * t
-	| K of int
+type t
 
-val roll: ?state:Random.State.t -> ?recorder:(int -> int -> unit) -> t -> int
+val roll: ?state: Random.State.t -> t -> (int * (int * int) list)
 
-val t_of_string: string -> t
-val string_of_t: t -> string
+val inject : int -> t
+val die: t -> t
+val dice: t -> t -> t
 
-module DSL: sig
-	val (!): int -> t
-	val (%): t -> t -> t
+val lift1: (int -> int) -> t -> t
+val lift2: (int -> int -> int) -> t -> t -> t
+
+module Integer : sig
+	val ( ! ): int -> t
+	val ( % ): t -> t -> t
 	val ( + ): t -> t -> t
 	val ( - ): t -> t -> t
 	val ( ~- ): t -> t
 	val ( * ): t -> t -> t
 	val ( / ): t -> t -> t
+	val ( mod ): t -> t -> t
+	val max: t -> t -> t
+	val min: t -> t -> t
 end

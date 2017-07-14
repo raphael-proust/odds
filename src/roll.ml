@@ -22,23 +22,17 @@ let main seed verbose formula =
 		| None -> None
 		| Some seed -> Some (Random.State.make [| seed |])
 	in
-	let record = ref [] in
-	let recorder side result = record := (side, result) :: !record in
-	let recorder = if verbose then Some recorder else None in
 
 	let formula = String.concat " " formula in
 
-	let t = Odds.t_of_string formula in
-	let r = Odds.roll ?state ?recorder t in
+	let t = Odds_parser.t_of_string formula in
+	let (r, rolls) = Odds.roll ?state t in
 
-	(match !record with
-	| [] -> ()
-	| _::_ as record ->
-		List.iter
-			(fun (s,r) -> Printf.printf "d%d: %d\n" s r)
-			record
+	(if verbose then
+		List.iter (fun (s,r) -> Printf.printf "d%d: %d\n" s r) rolls
+	else
+		()
 	);
-
 	Printf.printf "%d\n%!" r
 
 
