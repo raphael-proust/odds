@@ -1,7 +1,6 @@
 %{
 
-open Odds
-open Odds.Integer
+open Odds.Algebra
 
 %}
 
@@ -15,7 +14,7 @@ open Odds.Integer
 %nonassoc NEG
 %left D
 
-%start<Odds.t> entry
+%start<int Odds.t> entry
 
 %%
 

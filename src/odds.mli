@@ -1,23 +1,51 @@
-type t
+(**
+Odds (Ocaml Dice Dice Something) is a library for rolling dice. It embeds the
+dice algebra into OCaml by providing dice rolling functions and lifting
+integer operations.
+*)
 
-val roll: ?state: Random.State.t -> t -> (int * (int * int) list)
+type 'a t
 
-val inject : int -> t
-val die: t -> t
-val dice: t -> t -> t
+val roll_fold: ?state: Random.State.t -> folder: ('acc -> int -> int -> 'acc) -> init: 'acc -> 'a t -> ('a * 'acc)
+val roll: ?state:  Random.State.t -> 'a t -> 'a
 
-val lift1: (int -> int) -> t -> t
-val lift2: (int -> int -> int) -> t -> t -> t
+val inject : 'a -> 'a t
+val die: int -> int t
+val dice: int -> int -> int t
+val lift1: ('a -> 'b) -> 'a t -> 'b t
+val lift2: ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
 
-module Integer : sig
-	val ( ! ): int -> t
-	val ( % ): t -> t -> t
-	val ( + ): t -> t -> t
-	val ( - ): t -> t -> t
-	val ( ~- ): t -> t
-	val ( * ): t -> t -> t
-	val ( / ): t -> t -> t
-	val ( mod ): t -> t -> t
-	val max: t -> t -> t
-	val min: t -> t -> t
+module Monad: sig
+	val return: 'a -> 'a t
+	val die: int -> int t
+	val dice: int -> int -> int t
+	val bind: 'a t -> ('a -> 'b t) -> 'b t
+	val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
+	val map: 'a t -> ('a -> 'b) -> 'b t
+	val map2: 'a t -> 'b t -> ('a -> 'b -> 'c) -> 'c t
+end
+
+module Algebra: sig
+	val ( ! ): int -> int t
+	val die: int t -> int t
+	val dice: int t -> int t -> int t
+	val ( % ): int t -> int t -> int t
+	val ( + ): int t -> int t -> int t
+	val ( - ): int t -> int t -> int t
+	val ( ~- ): int t -> int t
+	val ( ~+ ): int t -> int t
+	val succ: int t -> int t
+	val pred: int t -> int t
+	val abs: int t -> int t
+	val ( * ): int t -> int t -> int t
+	val ( / ): int t -> int t -> int t
+	val ( mod ): int t -> int t -> int t
+	val max: int t -> int t -> int t
+	val min: int t -> int t -> int t
+	val ( = ): int t -> int t -> bool t
+	val ( <> ): int t -> int t -> bool t
+	val ( < ): int t -> int t -> bool t
+	val ( > ): int t -> int t -> bool t
+	val ( <= ): int t -> int t -> bool t
+	val ( >= ): int t -> int t -> bool t
 end

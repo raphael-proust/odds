@@ -26,13 +26,16 @@ let main seed verbose formula =
 	let formula = String.concat " " formula in
 
 	let t = Odds_parser.t_of_string formula in
-	let (r, rolls) = Odds.roll ?state t in
+	
+	let r =
+		if verbose then
+			let folder () x y = Printf.printf "d%d: %d\n" x y in
+			let init = () in
+			fst (Odds.roll_fold ?state ~folder ~init t)
+		else
+			Odds.roll ?state t
+	in
 
-	(if verbose then
-		List.iter (fun (s,r) -> Printf.printf "d%d: %d\n" s r) rolls
-	else
-		()
-	);
 	Printf.printf "%d\n%!" r
 
 
