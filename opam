@@ -1,7 +1,7 @@
 opam-version: "1.2"
 maintainer: "Raphaël Proust"
 authors: ["Raphaël Proust"]
-homepage: "https://github.com/raphael-proust/odds"
+dev-repo: "https://github.com/raphael-proust/odds.git"
 license: "ISC"
 homepage: "https://github.com/raphael-proust/odds"
 bug-reports: "https://github.com/raphael-proust/odds"
