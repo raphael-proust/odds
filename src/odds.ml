@@ -1,8 +1,9 @@
 type 'a t = Random.State.t -> (int -> int -> unit) -> 'a
 
-let inject i _ _ = i
+(* Underlying evaluation function. There are multiple wrapper below. *)
 let roll state folder t = t state folder
-	
+
+(* Wrappers around Random to emulate dice *)
 let die_unsafe (d: int) : int t = fun state folder ->
 	let result = 1 + Random.State.int state d in
 	folder d result;
@@ -27,10 +28,7 @@ let dice (n: int) (d: int) : int t =
 	else
 		dice_unsafe n d
 
-let bind (t: 'a t) (f: 'a -> 'b t) : 'b t = fun state folder ->
-	let r = t state folder in
-	f r state folder
-let lift1 (f: 'a -> 'b) (x: 'a t) : 'b t = fun state folder ->
+let lift1 f x = fun state folder ->
 	let x = roll state folder x in
 	f x
 let lift2 f x y = fun state folder ->
@@ -39,6 +37,7 @@ let lift2 f x y = fun state folder ->
 	f x y
 
 
+let inject i _ _ = i
 let roll_fold ?state ~folder ~init t =
 	let state = match state with
 		| None -> Random.State.make_self_init ()
@@ -57,19 +56,22 @@ let roll ?state t =
 
 module Monad = struct
 	let return = inject
-	let die = die
-	let dice = dice
-	let bind = bind
+	let bind t f = fun state folder ->
+		let r = t state folder in
+		f r state folder
 	let ( >>= ) = bind
 	let map t f = lift1 f t
-	let map2 t u f = lift2 f t u
-	let run = roll
+	let ( >|= ) = map
 end
 
 module Algebra = struct
 	let ( ! ) = inject
-	let die d = bind d die
-	let dice (n: int t) (d: int t) : int t = bind n (fun n -> bind d (fun d -> dice n d))
+	let die d = Monad.bind d die
+	let dice n d = Monad.(
+		n >>= fun n ->
+		d >>= fun d ->
+		dice n d
+	)
 	let ( % ) = dice
 	let ( + ) = lift2 ( + )
 	let ( - ) = lift2 ( - )
@@ -83,6 +85,9 @@ module Algebra = struct
 	let ( mod ) = lift2 ( mod )
 	let max = lift2 max
 	let min = lift2 min
+end
+
+module Comparisons = struct
 	let ( = ) = lift2 ( = )
 	let ( <> ) = lift2 ( <> )
 	let ( < ) = lift2 ( < )

@@ -17,13 +17,23 @@ let test_core () =
 
 let test_algebra () =
 	let open Odds.Algebra in
-	assert (Odds.roll ( (!1 % !1) = !1) );
-	assert (Odds.roll ( (!1 + !1 % !1) = !2) );
-	assert (Odds.roll ( (!1 + !1 % !1 + !1 % !1) = !3) );
-	assert (Odds.roll ( (!1 + min (!1 % !1) (!1000 % !1000 + !1)) = !2) );
+	assert ( Odds.roll (!1 % !1) = 1 );
+	assert ( Odds.roll (!1 + !1 % !1) = 2 );
+	assert ( Odds.roll (!1 + !1 % !1 + !1 % !1) = 3 );
+	assert ( Odds.roll (!1 + min (!1 % !1) (!1000 % !1000 + !1)) = 2 );
+	()
+
+let test_comparisons () =
+	let open Odds.Algebra in
+	let open Odds.Comparisons in
+	assert (Odds.roll ((!1 % !1) = !1) );
+	assert (Odds.roll ((!1 + !1 % !1) = !2) );
+	assert (Odds.roll ((!1 + !1 % !1 + !1 % !1) = !3) );
+	assert (Odds.roll ((!1 + min (!1 % !1) (!1000 % !1000 + !1)) = !2) );
 	()
 
 let test_monad () =
+	let open Odds in
 	let open Odds.Monad in
 	assert (
 		Odds.roll (
@@ -44,6 +54,7 @@ let test_parser () =
 let test () =
 	test_core ();
 	test_algebra ();
+	test_comparisons ();
 	test_monad ();
 	test_parser ();
 	()
