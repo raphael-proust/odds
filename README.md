@@ -14,4 +14,6 @@ Odds can be installed with `opam`:
 
 ## Documentation
 
+To generate the documentation, use `topkg doc`.
 
+To consult online documentation, visit <https://raphael-proust.github.io/code/odds/index.html>
