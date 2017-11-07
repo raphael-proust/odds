@@ -17,6 +17,8 @@ rule token = parse
 	| ['*' 'x'] { Parser.STAR }
 	| '(' { Parser.LPAREN }
 	| ')' { Parser.RPAREN }
+	| "max" { Parser.MAX }
+	| "min" { Parser.MIN }
 
 	| _ { failwith "lexer error" }
 

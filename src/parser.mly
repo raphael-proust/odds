@@ -6,12 +6,13 @@ open Odds.Algebra
 
 %token EOF
 %token <int> INTEGER
-%token PLUS DASH STAR SLASH D
+%token PLUS DASH STAR SLASH D MIN MAX
 %token LPAREN RPAREN
 
 %left PLUS DASH
 %left STAR SLASH
 %nonassoc NEG
+%left MAX MIN
 %left D
 
 %start<int Odds.t> entry
@@ -25,6 +26,8 @@ formula:
 	| i=INTEGER { !i }
 	| LPAREN t = formula RPAREN { t }
 	| l=formula D r=formula { dice l r }
+	| MAX f1=formula f2=formula { max f1 f2 }
+	| MIN f1=formula f2=formula { min f1 f2 }
 	| l=formula PLUS r=formula { l + r }
 	| l=formula DASH r=formula { l - r }
 	| l=formula STAR r=formula { l * r }
