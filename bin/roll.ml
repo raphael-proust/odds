@@ -40,14 +40,15 @@ let main seed verbose formula =
 
 
 let main_t = Cmdliner.Term.(
-	pure main $ seed $ verbose $ formula
+	const main $ seed $ verbose $ formula
 )
 
 let info =
-	Cmdliner.Term.info "roll"
+	Cmdliner.Cmd.info "roll"
 		~doc:"Roll a dice formula"
 
-let () = match Cmdliner.Term.eval (main_t, info) with
-	| `Error _ -> exit 1
-	| _ -> exit 0
+let cmd = Cmdliner.Cmd.v info main_t
 
+let () =
+	let code = Cmdliner.Cmd.eval cmd in
+	exit code

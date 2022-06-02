@@ -1,0 +1,14 @@
+(executable
+ (name roll)
+ (public_name roll)
+ (package odds)
+ (libraries odds cmdliner)
+)
+
+(menhir
+ (modules parser)
+)
+
+(ocamllex
+ (modules lexer)
+)

@@ -1,0 +1,4 @@
+(library
+ (name odds)
+ (public_name odds)
+)
