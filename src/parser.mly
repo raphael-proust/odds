@@ -1,9 +1,3 @@
-%{
-
-open Odds.Algebra
-
-%}
-
 %token EOF
 %token <int> INTEGER
 %token PLUS DASH STAR SLASH D MIN MAX
@@ -15,7 +9,7 @@ open Odds.Algebra
 %left MAX MIN
 %left D
 
-%start<int Odds.t> entry
+%start<int> entry
 
 %%
 
@@ -23,9 +17,12 @@ entry:
 	| t=formula EOF { t }
 
 formula:
-	| i=INTEGER { !i }
+	| i=INTEGER { i }
 	| LPAREN t = formula RPAREN { t }
-	| l=formula D r=formula { dice l r }
+	| l=formula D r=formula {
+			if r = 0 then raise (Invalid_argument "roll: zero-faced die");
+			DiceEffects.roll_multiple l r
+	}
 	| MAX f1=formula f2=formula { max f1 f2 }
 	| MIN f1=formula f2=formula { min f1 f2 }
 	| l=formula PLUS r=formula { l + r }

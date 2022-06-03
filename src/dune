@@ -2,7 +2,7 @@
  (name roll)
  (public_name roll)
  (package odds)
- (libraries odds cmdliner)
+ (libraries cmdliner)
 )
 
 (menhir
