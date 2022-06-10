@@ -9,7 +9,7 @@
 %left MAX MIN
 %left D
 
-%start<int> entry
+%start<Dice.formula> entry
 
 %%
 
@@ -17,18 +17,18 @@ entry:
 	| t=formula EOF { t }
 
 formula:
-	| i=INTEGER { i }
+	| i=INTEGER { Dice.Constant i }
 	| LPAREN t = formula RPAREN { t }
-	| l=formula D r=formula {
+	| l=INTEGER D r=INTEGER {
 			if r = 0 then raise (Invalid_argument "roll: zero-faced die");
-			DiceEffects.roll_multiple l r
+			Dice.Dice (l, r)
 	}
-	| MAX f1=formula f2=formula { max f1 f2 }
-	| MIN f1=formula f2=formula { min f1 f2 }
-	| l=formula PLUS r=formula { l + r }
-	| l=formula DASH r=formula { l - r }
-	| l=formula STAR r=formula { l * r }
-	| l=formula SLASH r=formula { l / r }
-	| DASH t=formula %prec NEG { ~- t }
+	| MAX f1=formula f2=formula { Dice.Best [f1; f2] }
+	| MIN f1=formula f2=formula { Dice.Worst [f1; f2] }
+	| l=formula PLUS r=formula { Dice.Plus (l, r) }
+	| l=formula DASH r=formula { Dice.Minus (l, r) }
+	| l=formula STAR r=formula { Dice.Mult (l, r) }
+	| l=formula SLASH r=formula { Dice.Div (l, r) }
+	| DASH t=formula %prec NEG { Dice.Neg t }
 
 %%

@@ -18,13 +18,14 @@ let main seed verbose formula =
 		| Some seed -> Random.State.make [| seed |]
 	in
 	let formula = String.concat " " formula in
+	let formula = Odds.Parser.entry Odds.Lexer.token (Lexing.from_string formula) in
 	Effect.Deep.match_with
-		(fun s -> Odds.Parser.entry Odds.Lexer.token (Lexing.from_string s)) formula
+		Odds.Dice.eval formula
 		{ Effect.Deep.retc = (fun r -> Printf.printf "%d\n%!" r; 0);
 			exnc = (fun e -> Printf.eprintf "%s\n%!" (Printexc.to_string e); 1);
 			effc = (fun (type a) (type b) (e : a Effect.t) : ((a, b) Effect.Deep.continuation -> b) option ->
 				match e with
-				| Odds.DiceEffects.Roll faces -> Some (fun k ->
+				| Odds.Dice.Roll faces -> Some (fun k ->
 					let v = Random.State.int state faces in
 					if verbose then Printf.printf "d%d: %d\n" faces v;
 					Effect.Deep.continue k v
