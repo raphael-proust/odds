@@ -1,0 +1,5 @@
+(tests
+ (libraries odds)
+ (package odds)
+ (names t)
+)

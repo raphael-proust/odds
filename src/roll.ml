@@ -19,12 +19,12 @@ let main seed verbose formula =
 	in
 	let formula = String.concat " " formula in
 	Effect.Deep.match_with
-		(fun s -> Parser.entry Lexer.token (Lexing.from_string s)) formula
+		(fun s -> Odds.Parser.entry Odds.Lexer.token (Lexing.from_string s)) formula
 		{ Effect.Deep.retc = (fun r -> Printf.printf "%d\n%!" r; 0);
 			exnc = (fun e -> Printf.eprintf "%s\n%!" (Printexc.to_string e); 1);
 			effc = (fun (type a) (type b) (e : a Effect.t) : ((a, b) Effect.Deep.continuation -> b) option ->
 				match e with
-				| DiceEffects.Roll faces -> Some (fun k ->
+				| Odds.DiceEffects.Roll faces -> Some (fun k ->
 					let v = Random.State.int state faces in
 					if verbose then Printf.printf "d%d: %d\n" faces v;
 					Effect.Deep.continue k v
