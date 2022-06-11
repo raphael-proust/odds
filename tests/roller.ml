@@ -39,7 +39,7 @@ let () =
 	Printf.printf ".%!";
 	assert (Result.is_ok @@ check [(10,4)] Odds.Dice.(Dice (1, 10)) 4);
 	Printf.printf ".%!";
-	assert (Result.is_ok @@ check [(10, 5); (20, 3)] Odds.Dice.(Minus (Dice (1,10), Dice (1,20))) 2);
+	assert (Result.is_ok @@ check [(10, 5); (20, 3)] Odds.Dice.(Binop (Sub, Dice (1,10), Dice (1,20))) 2);
 	Printf.printf ".%!";
 	assert (Result.is_ok @@ check [] (Odds.Dice.Constant 0) 0);
 	Printf.printf ".%!";

@@ -19,20 +19,19 @@ let main seed verbose formula =
 	in
 	let formula = String.concat " " formula in
 	let formula = Odds.Parser.entry Odds.Lexer.token (Lexing.from_string formula) in
-	Effect.Deep.match_with
-		Odds.Dice.eval formula
-		{ Effect.Deep.retc = (fun r -> Printf.printf "%d\n%!" r; 0);
-			exnc = (fun e -> Printf.eprintf "%s\n%!" (Printexc.to_string e); 1);
-			effc = (fun (type a) (type b) (e : a Effect.t) : ((a, b) Effect.Deep.continuation -> b) option ->
-				match e with
+	let effc
+		: type a b. a Effect.t -> ((a, b) Effect.Deep.continuation -> b) option
+		= function
 				| Odds.Dice.Roll faces -> Some (fun k ->
 					let v = Random.State.int state faces in
 					if verbose then Printf.printf "d%d: %d\n" faces v;
 					Effect.Deep.continue k v
 				)
 				| _ -> None
-			) ;
-		}
+	in
+	Effect.Deep.try_with
+		Odds.Dice.eval formula
+		{ Effect.Deep.effc }
 
 
 let main_t = Cmdliner.Term.(
@@ -44,5 +43,7 @@ let info = Cmdliner.Cmd.info "roll" ~doc:"Roll a dice formula"
 let cmd = Cmdliner.Cmd.v info main_t
 
 let () =
-	let code = Cmdliner.Cmd.eval' cmd in
-	exit code
+	match Cmdliner.Cmd.eval_value cmd with
+	| Ok (`Ok r) -> Printf.printf "%d\n%!" r; exit 0
+	| Ok _ -> exit 0
+	| Error _ -> exit 1
