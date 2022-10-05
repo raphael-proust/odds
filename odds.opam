@@ -8,7 +8,7 @@ bug-reports: "https://github.com/raphael-proust/odds"
 tags: ["games" "dice" "random"]
 depends: [
 	"dune" { >= "3.0.0" }
-	"ocaml" { >= "4.02.0" }
+	"ocaml" { >= "5.0.0" }
 	"menhir" { build }
 	"cmdliner"
 ]
