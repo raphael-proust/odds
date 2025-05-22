@@ -23,33 +23,5 @@ let rec keep n ys x =
 			else
 				x :: keep (n - 1) ys y
 
-type unop = Neg
-type binop = Add | Sub | Mul | Div | Max | Min
-type formula =
-	| Constant of int
-	| Dice of int * int
-	| Keep of int * int * int
-	| Binop of binop * formula * formula
-	| Unop of unop * formula
-
-let apply_binop = function
-	| Add -> ( + )
-	| Sub -> ( - )
-	| Mul -> ( * )
-	| Div -> ( / )
-	| Max -> max
-	| Min -> min
-
-let apply_unop Neg = ( ~- )
-
-let rec eval = function
-	| Constant i -> i
-	| Dice (rolls, faces) -> fold (+) 0 rolls faces
-  | Keep (rolls, faces, keeps) -> List.fold_left (+) 0 @@ fold (keep keeps) [] rolls faces
-	| Binop (binop, f1, f2) ->
-		let i1 = eval f1 in
-		let i2 = eval f2 in
-		apply_binop binop i1 i2
-	| Unop (unop, f) ->
-		let i = eval f in
-		apply_unop unop i
+let d rolls faces = fold (+) 0 rolls faces
+let dk rolls faces keeps = List.fold_left (+) 0 @@ fold (keep keeps) [] rolls faces

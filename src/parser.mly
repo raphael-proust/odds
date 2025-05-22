@@ -9,7 +9,7 @@
 %left MAX MIN
 %left D
 
-%start<Dice.formula> entry
+%start<int> entry
 
 %%
 
@@ -17,22 +17,21 @@ entry:
 	| t=formula EOF { t }
 
 formula:
-	| i=INTEGER { Dice.Constant i }
+	| i=INTEGER { i }
 	| LPAREN t = formula RPAREN { t }
-	| l=INTEGER D r=INTEGER {
-			if r = 0 then raise (Invalid_argument "roll: zero-faced die");
-			Dice.Dice (l, r)
+	| rolls=INTEGER D faces=INTEGER {
+			if faces = 0 then raise (Invalid_argument "roll: zero-faced die");
+			Dice.d rolls faces
 	}
-	| l=INTEGER D r=INTEGER K k=INTEGER {
-			if r = 0 then raise (Invalid_argument "roll: zero-faced die");
-			Dice.Keep (l, r, k)
+	| rolls=INTEGER D faces=INTEGER K keeps=INTEGER {
+			if faces = 0 then raise (Invalid_argument "roll: zero-faced die");
+			Dice.dk rolls faces keeps
 	}
-	| MAX f1=formula f2=formula { Dice.Binop (Max, f1, f2) }
-	| MIN f1=formula f2=formula { Dice.Binop (Min, f1, f2) }
-	| l=formula PLUS r=formula { Dice.Binop (Add, l, r) }
-	| l=formula DASH r=formula { Dice.Binop (Min, l, r) }
-	| l=formula STAR r=formula { Dice.Binop (Mul, l, r) }
-	| l=formula SLASH r=formula { Dice.Binop (Div, l, r) }
-	| DASH t=formula %prec NEG { Dice.Unop (Neg, t) }
+	| MAX f1=formula f2=formula { max f1 f2 }
+	| MIN f1=formula f2=formula { min f1 f2 }
+	| l=formula PLUS r=formula { l + r }
+	| l=formula DASH r=formula { l - r }
+	| l=formula STAR r=formula { l * r }
+	| l=formula SLASH r=formula { l / r }
 
 %%

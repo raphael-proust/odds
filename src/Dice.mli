@@ -3,21 +3,6 @@
     with a random number from [1] to [faces] inclusive. *)
 type _ Effect.t += Roll : int -> int Effect.t
 
-(** [fold f init rolls faces] folds [f] over [rolls] rolls of a [faces]-faced
-    die starting with [init].
+val d : int -> int -> int
 
-    E.g., [fold max 0 2 20] takes the best of two d20 rolls. *)
-val fold : ('a -> int -> 'a) -> 'a -> int -> int -> 'a
-
-val keep : int -> (int list -> int -> int list)
-
-type unop = Neg
-type binop = Add | Sub | Mul | Div | Max | Min
-type formula =
-	| Constant of int
-	| Dice of int * int
-	| Keep of int * int * int
-	| Binop of binop * formula * formula
-	| Unop of unop * formula
-
-val eval : formula -> int
+val dk: int -> int -> int -> int
