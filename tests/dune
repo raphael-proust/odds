@@ -1,5 +1,5 @@
 (tests
  (libraries odds)
  (package odds)
- (names parser roller)
+ (names parser)
 )
