@@ -24,6 +24,7 @@ let main seed verbose formula =
 		= function
 				| Odds.Dice.Roll faces -> Some (fun k ->
 					let v = Random.State.int state faces in
+					let v = v + 1 in
 					if verbose then Printf.printf "d%d: %d\n" faces v;
 					Effect.Deep.continue k v
 				)
