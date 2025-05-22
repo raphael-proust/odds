@@ -10,6 +10,7 @@ rule token = parse
 	| eof { Parser.EOF }
 	| digit+ as i { Parser.INTEGER (int_of_string i) }
 	| ['d' 'D'] { Parser.D }
+	| ['k' 'K'] { Parser.K }
 	| '+' { Parser.PLUS }
 	| '-' { Parser.DASH }
 	| '/' { Parser.SLASH }

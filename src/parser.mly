@@ -1,6 +1,6 @@
 %token EOF
 %token <int> INTEGER
-%token PLUS DASH STAR SLASH D MIN MAX
+%token PLUS DASH STAR SLASH D K MIN MAX
 %token LPAREN RPAREN
 
 %left PLUS DASH
@@ -22,6 +22,10 @@ formula:
 	| l=INTEGER D r=INTEGER {
 			if r = 0 then raise (Invalid_argument "roll: zero-faced die");
 			Dice.Dice (l, r)
+	}
+	| l=INTEGER D r=INTEGER K k=INTEGER {
+			if r = 0 then raise (Invalid_argument "roll: zero-faced die");
+			Dice.Keep (l, r, k)
 	}
 	| MAX f1=formula f2=formula { Dice.Binop (Max, f1, f2) }
 	| MIN f1=formula f2=formula { Dice.Binop (Min, f1, f2) }

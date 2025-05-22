@@ -12,11 +12,23 @@ let fold f init n faces =
 	in
 	loop init n
 
+let rec keep n ys x =
+	if n <= 0 then
+		[]
+	else match ys with
+		| [] -> [x]
+		| y :: ys ->
+			if y >= x then
+				y :: keep (n - 1) ys x
+			else
+				x :: keep (n - 1) ys y
+
 type unop = Neg
 type binop = Add | Sub | Mul | Div | Max | Min
 type formula =
 	| Constant of int
 	| Dice of int * int
+	| Keep of int * int * int
 	| Binop of binop * formula * formula
 	| Unop of unop * formula
 
@@ -33,6 +45,7 @@ let apply_unop Neg = ( ~- )
 let rec eval = function
 	| Constant i -> i
 	| Dice (rolls, faces) -> fold (+) 0 rolls faces
+  | Keep (rolls, faces, keeps) -> List.fold_left (+) 0 @@ fold (keep keeps) [] rolls faces
 	| Binop (binop, f1, f2) ->
 		let i1 = eval f1 in
 		let i2 = eval f2 in
