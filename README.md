@@ -15,19 +15,18 @@ Odds can be installed with `opam`:
 
 ## Structure
 
-- `Odds.Dice` contains basic definitions for dice rolling. The code exported by
-	this module only ever perform the `Odds.Dice.Roll` effect and no other
-	side-effect. In particular it does not handle PNRG state: instead, the caller
-	of `eval` is responsible for installing an effect handler for `Roll`.
+- `Odds.Dice` contains basic definitions for the `Roll` effect and for basic
+	dice algebra operators: `d` and `d`-`k`.
 
-- `roll` is an implementation of a simple dice-roller using the `Odds` library.
-	It is mostly intended to be used as an example for how to use `Odds. In
-	particular, how to handle the `Roll` effect.
+- The parser (`parser.mly`) parses the string and emits the `Roll` effects as
+	needed.
 
-- `tests/` contains tests for the parser (`Odds.Parser`, `Odds.Lexer`) and the
-	roller (`Odds.Dice.eval` function). This latter test only checks that the
-	evaluation of a formula performs the expected `Roll` effects, it does not make
-	any assertion on the actual result.
+- `roll` is an implementation of a simple dice-roller using the `Odds` library
+	and parser.
+
+- `tests/parser.ml` tests the parser. It uses a Shallow effect handler to
+	maintain a state of what rolls it expects to see and what pre-rolled values
+	are used.
 
 
 ## Documentation
